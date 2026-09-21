@@ -87,6 +87,7 @@ sim/                   PROVIDED — please do not modify anything in here.
 
 requirements.txt       pip dependencies (numpy, matplotlib — only for the visualizer).
 AI_LOG.md              Template for your AI usage log (Part 3).
+METHODOLOGY.md         Template for how to run your work and your thought process (Part 4).
 ```
 
 ### Familiarisation — read these before you start
@@ -226,6 +227,7 @@ Each step has a check that tells you it's right before you move on, and ends wit
 | 6 | Add the replan logic. Run `boulders`, `wall`. | Reaches the goal, 0 blocked ticks. | `step 6: replanning` |
 | 7 | `popup` and `goal-blocked`. | Reaches the goal, 0 blocked ticks, 0 needless replans. | `step 7: popup and goal-blocked` |
 | 8 | `--all`, then some `--scenario random --seed N` you haven't tried. | Every row reaches the goal. | `step 8: random seeds` |
+| 9 | Write your write-up (in this README), finish `METHODOLOGY.md` and `AI_LOG.md`. | Every question in the write-up has an answer with numbers from your own runs. | `step 9: write-up, methodology and AI log` |
 
 Use `--visualize` (or `--save-png`) constantly. You will learn more from watching one replan happen than from re-reading your code.
 
@@ -334,6 +336,16 @@ This is not graded on whether you used AI — it is graded on whether you can te
 
 ---
 
+## Part 4: METHODOLOGY.md (required)
+
+Edit the `METHODOLOGY.md` in the repo root (there is a template) so it covers:
+
+- **How to run your code.** The exact steps for a reviewer to install everything and run your work from a fresh clone and see it working. Say which Python version and OS you tested on.
+- **Your thought process, in bullet points.** Why you made the choices you did, and what your own runs showed.
+- **Known limitations.** What doesn't work, and what you'd do next. Being upfront counts in your favor.
+
+The "Your write-up" section of this README answers specific questions with numbers from your runs; `METHODOLOGY.md` is the how-to-run and the reasoning, in your own words. Write it for a teammate who has never seen your code.
+
 ## Rubric
 
 | Criterion | What we're scoring |
@@ -380,4 +392,4 @@ We don't expect a perfect implementation. Those who show genuine effort and lear
 3. **Check that it's public.** Open your repo's link in a private/incognito browser window. If you can see the code without logging in, so can we.
 4. **Send us the link** in the Google Form you'll be asked to fill out.
 
-Your repo should include your code, your write-up (the section above, in this README), your `AI_LOG.md`, and your **full commit history** (push all of it; do not squash).
+Your repo should include your code, your write-up (the section above, in this README), your `METHODOLOGY.md`, your `AI_LOG.md`, and your **full commit history** (push all of it; do not squash).
