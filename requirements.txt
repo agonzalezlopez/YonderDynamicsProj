@@ -1,0 +1,4 @@
+# Only needed for the live picture (--visualize / --save-png).
+# The simulator and the unit tests use the standard library only.
+numpy>=1.24
+matplotlib>=3.7
