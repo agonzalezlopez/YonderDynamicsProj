@@ -96,7 +96,12 @@ class TestInflate(unittest.TestCase):
         out = inflate(self.one_obstacle(resolution=0.25), 0.5)
         self.assertTrue(out.is_occupied(4, 6))
         self.assertTrue(out.is_occupied(2, 4))
+        self.assertTrue(out.is_occupied(4, 2))
+
         self.assertFalse(out.is_occupied(4, 7))
+        self.assertFalse(out.is_occupied(1, 4))
+        self.assertFalse(out.is_occupied(5, 2))
+        self.assertFalse(out.is_occupied(7, 4))
 
     def test_zero_radius_changes_nothing(self):
         g = self.one_obstacle()

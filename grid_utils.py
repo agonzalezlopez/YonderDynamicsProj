@@ -107,7 +107,10 @@ class Grid:
         The result may lie outside the grid; callers use in_bounds().
         """
         # TODO: implement
-        raise NotImplementedError("Grid.world_to_cell")
+        currCell = (math.floor((y - self.origin_y) / self.resolution)
+            , math.floor((x - self.origin_x) / self.resolution))
+
+        return currCell
 
     def cell_to_world(self, row: int, col: int) -> Point:
         """
@@ -117,7 +120,10 @@ class Grid:
         search returns into something the rover can drive to.
         """
         # TODO: implement
-        raise NotImplementedError("Grid.cell_to_world")
+        x_pos = self.origin_x + (col + 0.5) * self.resolution
+        y_pos = self.origin_y + (row + 0.5) * self.resolution
+
+        return (x_pos, y_pos)
 
 
 def path_length_m(points_xy: Sequence[Point]) -> float:
@@ -146,4 +152,24 @@ def inflate(grid: Grid, radius_m: float) -> Grid:
         for radius >= one cell.
     """
     # TODO: implement
-    raise NotImplementedError("inflate")
+    newGrid = Grid.copy(grid)
+    radius_cells = math.ceil(radius_m / newGrid.resolution)
+
+    for i,values in enumerate(grid.occupancy):
+        row = math.floor(i / newGrid.width)
+        col = i % newGrid.width
+
+        if(grid.is_occupied(row,col)):
+            for row_offset in range(-radius_cells, radius_cells + 1):
+                for col_offset in range(-radius_cells, radius_cells + 1):
+                    nearby_col = col + col_offset
+                    nearby_row = row + row_offset
+                    if(newGrid.in_bounds(nearby_row,nearby_col)):
+                        #Distance formula
+                        # dist_m = math.sqrt((row_offset * grid.resolution) 
+                        #     ** 2 + (col_offset * grid.resolution) ** 2)
+                        # if(dist_m <= radius_m):
+                        index_holder = newGrid.index(nearby_row,nearby_col)
+                        newGrid.occupancy[index_holder] = OCCUPIED
+    
+    return newGrid
