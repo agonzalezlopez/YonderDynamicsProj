@@ -92,6 +92,7 @@ class PlannerNode(Node):
         self.last_replan_stamp = None  # sim time of the most recent replan, or None
         
         self.last_status_stamp = None # How often it prints
+        self.no_route_stamp = None # time stamp for retrying for new plan
 
     # -----------------------------------------------------------------------
     # The callback: runs once per tick
@@ -154,8 +155,14 @@ class PlannerNode(Node):
         # TODO: implement
         if(self.path_xy is None):
             return (True, "Path was never planned")
+            
         if(not self.path_xy):
-            return (False, "No route")
+            if(self.no_route_stamp is None):
+                self.no_route_stamp = stamp
+                return (False, "No route")
+            if(stamp - self.no_route_stamp >= 2): # After 2 sim seconds have passed
+                return (True,"Locating different Route")
+            
         index = next_waypoint_index(self.path_xy,rover_xy)
         valid = path_is_valid(grid, self.path_xy,index)
         if(not valid):
