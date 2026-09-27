@@ -67,7 +67,7 @@ def path_is_valid(grid: Grid, path_xy: Sequence[Point], start_index: int = 0) ->
         if(not grid.in_bounds(pos_to_cell[0],pos_to_cell[1])):
             return False
 
-        if(grid.is_occupied(pos_to_cell[0],pos_to_cell[1])):
+        if(grid.is_reliably_occupied(pos_to_cell[0],pos_to_cell[1])):
             return False
             
     return True
