@@ -170,7 +170,8 @@ class PlannerNode(Node):
 
         if(not self.path_xy):
             return (False, "No routes")
-            
+        
+        #Check next path using current position
         index = next_waypoint_index(self.path_xy,rover_xy)
         valid = path_is_valid(grid, self.path_xy,index)
 
@@ -194,6 +195,7 @@ class PlannerNode(Node):
         #originally True boolean was empty, causing unknown blocks to be seen as obstacles
         result_cells = astar(grid, first, last,True)
 
+        #no path available
         if(result_cells is None):
             return []
         world_points = []
