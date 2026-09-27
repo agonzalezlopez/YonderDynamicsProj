@@ -73,7 +73,7 @@ AssertionError: unexpectedly None
 
 I asked for help understanding how to implement the neighbor exploration portion of A*. I specifically needed help with 8-directional movement, calculating straight versus diagonal movement costs, and determining how to calculate the accumulated cost for each neighbor.
 **What I kept vs. rewrote, and why:**
-I kept the approach of using direction tuples to represent the eight possible movements and using a priority queue containing (f, cell). I also kept the idea of storing`g costs and previous cells for reconstructing the final path. I wrote and organized the actual implementation myself.
+I kept the approach of using direction tuples to represent the eight possible movements and using a priority queue containing (f, cell). I also kept the idea of storing g costs and previous cells for reconstructing the final path. I wrote and organized the actual implementation myself.
 **What the AI got wrong that I had to catch:**
 The initial implementation guidance did not account for the fact that my Grid.in_bounds() function required separate row and column arguments. I had to adjust the calls to provide both coordinates.
 **How I verified it ran correctly (not just that it compiled):**
@@ -86,13 +86,24 @@ Traceback (most recent call last):
 TypeError: Grid.in_bounds() missing 1 required positional argument: 'col'
 
 
-## 5. <next use>
+## 5. Debugging Planner_node file
 
 **What I asked:**
-
-
+I asked to verify any issues with the program and if there was incorrect logic, causing the plan to work. 
 **What I kept vs. rewrote, and why:**
-
+I kept the overall structure the same, I changed the conditions or scenarios in which a replan would need to be called. I changed them since I only had taken account for when the plan is None and also made the unknown_is_free variable True when there was an empty plan
 **What the AI got wrong that I had to catch:**
-
+The AI wanted to create a periodical caller to try replanning whenever the plan was empty, but that wasn't what was asked for in description and would create more issues
 **How I verified it ran correctly (not just that it compiled):**
+========================================================================
+ RUN SUMMARY   scenario=open  noise=off
+========================================================================
+ Result             STALLED: rover made no progress for 30 s (gave up at t=30.0 s)
+ Distance driven    0.0 m   (straight line start to goal is 36.8 m)
+ Blocked ticks      0
+ Paths published    0   (0 plans, 0 of them replans)
+ Needless replans   0
+ Your node reports  replan_count=0   (the scoreboard counted 0)
+
+ !! Your node published 1 paths but every one was EMPTY, which means 'no route found, stop'. Print what your search returns on the first ticks to see why.
+

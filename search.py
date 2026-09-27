@@ -127,4 +127,3 @@ def astar(grid: Grid, start: Cell, goal: Cell, unknown_is_free: bool = False) ->
 
 
 
-

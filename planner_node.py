@@ -72,13 +72,16 @@ class PlannerNode(Node):
         # self.grid_sub = self.create_subscription(
         #     GridSnapshot, "/grid_feed", self.on_grid, ???
         # )
+        qos = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, durability=DurabilityPolicy.VOLATILE, depth=1,)
 
+        self.grid_sub = self.create_subscription(GridSnapshot, "/grid_feed",self.on_grid, qos)
         # ------------------------------------------------------------------
         # Publisher
         # ------------------------------------------------------------------
         # TODO: Create a publisher for /planned_path (message type: Path).
         #
         # self.path_pub = self.create_publisher(Path, "/planned_path", 10)
+        self.path_pub = self.create_publisher(Path, "/planned_path",10)
 
         # ------------------------------------------------------------------
         # State — add whatever you need
@@ -87,6 +90,8 @@ class PlannerNode(Node):
         self.plan_count = 0          # how many plans you have published (initial one included)
         self.replan_count = 0        # how many of those replaced an existing plan
         self.last_replan_stamp = None  # sim time of the most recent replan, or None
+        
+        self.last_status_stamp = None # How often it prints
 
     # -----------------------------------------------------------------------
     # The callback: runs once per tick
@@ -109,7 +114,26 @@ class PlannerNode(Node):
         and not otherwise. The scoreboard tells you how you did.
         """
         # TODO: implement
-        raise NotImplementedError("PlannerNode.on_grid")
+        count = 1
+        if(self.path_xy == None or not self.path_xy):
+            count = 0
+        converted_grid = Grid.from_msg(msg)
+        inflated_grid = inflate(converted_grid, msg.robot_radius_m)
+        #Current Positions (World Pos)
+        starting_pos = (msg.rover_x,msg.rover_y)
+        goal = (msg.goal_x,msg.goal_y)
+
+        replan, reason = self.needs_replan(inflated_grid, starting_pos)
+        if(replan):
+            self.path_xy = self.plan(inflated_grid,starting_pos, goal)
+            self.publish_path(self.path_xy,msg.header.stamp)
+            self.replan_count += count
+            self.plan_count += 1
+            self.last_replan_stamp = msg.header.stamp
+
+        self.print_status(msg.header.stamp)
+
+
 
     def needs_replan(self, grid: Grid, rover_xy) -> tuple:
         """
@@ -128,7 +152,17 @@ class PlannerNode(Node):
         output and makes debugging a hundred times easier.
         """
         # TODO: implement
-        raise NotImplementedError("PlannerNode.needs_replan")
+        if(self.path_xy is None):
+            return (True, "Path was never planned")
+        if(not self.path_xy):
+            return (False, "No route")
+        index = next_waypoint_index(self.path_xy,rover_xy)
+        valid = path_is_valid(grid, self.path_xy,index)
+        if(not valid):
+            return (True, "Path is no longer valid")
+
+        return (False, "Path is still valid")
+        
 
     def plan(self, grid: Grid, rover_xy, goal_xy):
         """
@@ -138,7 +172,20 @@ class PlannerNode(Node):
         Convert world -> cell, call astar, convert the cells back to world points.
         """
         # TODO: implement
-        raise NotImplementedError("PlannerNode.plan")
+        first = grid.world_to_cell(rover_xy[0],rover_xy[1])
+        last = grid.world_to_cell(goal_xy[0],goal_xy[1])
+
+        result_cells = astar(grid, first, last,True)
+
+        if(result_cells is None):
+            return []
+        world_points = []
+        for cells in result_cells:
+            curr_point = grid.cell_to_world(cells[0],cells[1])
+
+            curr_world_point = (curr_point[0],curr_point[1])
+            world_points.append(curr_world_point)
+        return world_points
 
     def publish_path(self, points_xy, stamp: float) -> None:
         """Publish a list of (x, y) world points as nav_msgs/Path. (provided)"""
@@ -162,4 +209,8 @@ class PlannerNode(Node):
         much faster than real time, so time.time() would give nonsense here.
         """
         # TODO: implement
-        raise NotImplementedError("PlannerNode.print_status")
+        if(self.last_status_stamp is None):
+            self.last_status_stamp = stamp
+        if(stamp - self.last_status_stamp >= 1):
+            self.last_status_stamp = stamp
+            print("Length: ", path_length_m(self.path_xy), " Replans: ", self.replan_count, " Last Replan: ", self.last_replan_stamp)
