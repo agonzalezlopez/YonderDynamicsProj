@@ -25,7 +25,18 @@ def next_waypoint_index(path_xy: Sequence[Point], rover_xy: Point) -> int:
     Ties: return the lower index. `path_xy` is never empty when this is called.
     """
     # TODO: implement
-    raise NotImplementedError("next_waypoint_index")
+    smallest_dist = 100000
+    closest_point = None
+    for coord in path_xy:
+        curr_dist = (rover_xy[0] - coord[0])**2 + (rover_xy[1] - coord[1])**2
+        if(curr_dist < smallest_dist):
+            smallest_dist = curr_dist
+            closest_point = coord
+
+    return path_xy.index(closest_point)
+
+
+    # raise NotImplementedError("next_waypoint_index")
 
 
 def path_is_valid(grid: Grid, path_xy: Sequence[Point], start_index: int = 0) -> bool:
@@ -46,4 +57,18 @@ def path_is_valid(grid: Grid, path_xy: Sequence[Point], start_index: int = 0) ->
     keep their meaning when the grid changes.
     """
     # TODO: implement
-    raise NotImplementedError("path_is_valid")
+    if(not path_xy):
+        return False
+    for pos in path_xy[start_index:]:
+        
+        #conversion
+        pos_to_cell = grid.world_to_cell(pos[0],pos[1])
+
+        if(not grid.in_bounds(pos_to_cell[0],pos_to_cell[1])):
+            return False
+
+        if(grid.is_occupied(pos_to_cell[0],pos_to_cell[1])):
+            return False
+            
+    return True
+    # raise NotImplementedError("path_is_valid")

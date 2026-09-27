@@ -51,7 +51,7 @@ Traceback (most recent call last):
     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: True is not false
 
-## 3. <next use>
+## 3. Handling Unknown sections
 
 **What I asked:**
 I asked for help implementing the unknown_is_free requirement in the A* search. I needed to determine where the check should be placed so that unknown cells would only be traversable when the flag was enabled.
@@ -67,7 +67,7 @@ Traceback (most recent call last):
 AssertionError: unexpectedly None
 
 
-## 4. <next use>
+## 4. Diagonal Corners
 
 **What I asked:**
 
@@ -85,3 +85,14 @@ Traceback (most recent call last):
        ~~~~~~~~~~~~~~^^^^^^^^^^^^^
 TypeError: Grid.in_bounds() missing 1 required positional argument: 'col'
 
+
+## 5. <next use>
+
+**What I asked:**
+
+
+**What I kept vs. rewrote, and why:**
+
+**What the AI got wrong that I had to catch:**
+
+**How I verified it ran correctly (not just that it compiled):**
