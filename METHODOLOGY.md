@@ -42,7 +42,10 @@ Your approach and the reasoning behind it, in bullet points.
     -For path_isValid(), mostly was checking if the current path is valid from current position, only had to check if it was within bounds and that it was not occupied
 
 * planner_node.py: 
+    - Intial Approach is using the A* algorithm to detect best path using known values. Final Approach is to constantly replanning every 2 seconds if something goes wrong with current path where goal is not detected
 
 ## 3. Known limitations
 
 What doesn't work, and what you'd do next. Being upfront counts in your favor.
+
+* Currently does not handle noise correctly, begins to do phantom replans and causes more unnecessary replanning. I am trying to figure out what needs to be changed and in what way. 
