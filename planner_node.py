@@ -124,8 +124,9 @@ class PlannerNode(Node):
         starting_pos = (msg.rover_x,msg.rover_y)
         goal = (msg.goal_x,msg.goal_y)
 
+        #Empty path and we have not yet retried
         if(not self.path_xy and self.no_route_stamp is not None):
-            if(msg.header.stamp - self.no_route_stamp >= 2):
+            if(msg.header.stamp - self.no_route_stamp >= 2): # 2 second requirement
                 self.path_xy = None
         
         replan, reason = self.needs_replan(inflated_grid, starting_pos)
@@ -172,7 +173,7 @@ class PlannerNode(Node):
             
         index = next_waypoint_index(self.path_xy,rover_xy)
         valid = path_is_valid(grid, self.path_xy,index)
-        
+
         if(not valid):
             return (True, "Path is no longer valid")
 

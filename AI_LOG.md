@@ -107,3 +107,52 @@ The AI wanted to create a periodical caller to try replanning whenever the plan 
 
  !! Your node published 1 paths but every one was EMPTY, which means 'no route found, stop'. Print what your search returns on the first ticks to see why.
 
+
+## 6. Debugging Planner_node file
+
+**What I asked:**
+I asked to verify if my placement of retrying plans was correct or if I was missing something
+**What I kept vs. rewrote, and why:**
+I kept the logic of using a timestamp so that it doesn't try replanning the route every call. I rewrote the retry plan logic so I only need to use one of the timestamps, since it was trying to use all three global timestamps, so that it wouldn't replan twice, but logic takes care of it 
+**What the AI got wrong that I had to catch:**
+The AI tried modifying the function header to add a timestamp to the needs_replan(), which would've caused more issues and would not be properly tested
+**How I verified it ran correctly (not just that it compiled):**
+
+BEFORE:
+========================================================================
+ RUN SUMMARY   scenario=goal-blocked  noise=off
+========================================================================
+ Result             STALLED: rover made no progress for 30 s (gave up at t=50.4 s)
+ Distance driven    30.6 m   (straight line start to goal is 36.8 m)
+ Blocked ticks      0
+ Paths published    4   (3 plans, 2 of them replans)
+ Needless replans   0
+ Your node reports  replan_count=3   (the scoreboard counted 2)
+
+ Path events:
+   tick    t(s)  kind       waypoints  length(m)   note
+      0     0.0  initial           53       36.8
+     14     2.8  replan            50       33.4
+     15     3.0  replan            51       33.7
+    102    20.4  stop               0        0.0
+
+AFTER:
+========================================================================
+ RUN SUMMARY   scenario=goal-blocked  noise=off
+========================================================================
+ Result             REACHED THE GOAL in 164 ticks (32.8 s simulated)
+ Distance driven    37.2 m   (straight line start to goal is 36.8 m)
+ Blocked ticks      0
+ Paths published    5   (4 plans, 2 of them replans)
+ Needless replans   0
+ Your node reports  replan_count=3   (the scoreboard counted 2)
+
+ Path events:
+   tick    t(s)  kind       waypoints  length(m)   note
+      0     0.0  initial           53       36.8
+     14     2.8  replan            50       33.4
+     15     3.0  replan            51       33.7
+    102    20.4  stop               0        0.0
+    142    28.4  recovery          12        6.9
+
+ World events: tick 102: 'goal blocked' appeared; tick 142: 'goal blocked' cleared
