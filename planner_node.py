@@ -124,9 +124,20 @@ class PlannerNode(Node):
         starting_pos = (msg.rover_x,msg.rover_y)
         goal = (msg.goal_x,msg.goal_y)
 
+        if(not self.path_xy and self.no_route_stamp is not None):
+            if(msg.header.stamp - self.no_route_stamp >= 2):
+                self.path_xy = None
+        
         replan, reason = self.needs_replan(inflated_grid, starting_pos)
         if(replan):
             self.path_xy = self.plan(inflated_grid,starting_pos, goal)
+
+            #Plan failed or no good route
+            if(not self.path_xy):
+                self.no_route_stamp = msg.header.stamp
+            else:
+                self.no_route_stamp = None 
+            
             self.publish_path(self.path_xy,msg.header.stamp)
             self.replan_count += count
             self.plan_count += 1
@@ -155,16 +166,13 @@ class PlannerNode(Node):
         # TODO: implement
         if(self.path_xy is None):
             return (True, "Path was never planned")
-            
+
         if(not self.path_xy):
-            if(self.no_route_stamp is None):
-                self.no_route_stamp = stamp
-                return (False, "No route")
-            if(stamp - self.no_route_stamp >= 2): # After 2 sim seconds have passed
-                return (True,"Locating different Route")
+            return (False, "No routes")
             
         index = next_waypoint_index(self.path_xy,rover_xy)
         valid = path_is_valid(grid, self.path_xy,index)
+        
         if(not valid):
             return (True, "Path is no longer valid")
 
