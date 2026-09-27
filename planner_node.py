@@ -175,6 +175,7 @@ class PlannerNode(Node):
         first = grid.world_to_cell(rover_xy[0],rover_xy[1])
         last = grid.world_to_cell(goal_xy[0],goal_xy[1])
 
+        #originally True boolean was empty, causing unknown blocks to be seen as obstacles
         result_cells = astar(grid, first, last,True)
 
         if(result_cells is None):
