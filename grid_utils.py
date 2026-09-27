@@ -93,6 +93,16 @@ class Grid:
         return Grid(self.width, self.height, self.resolution, self.origin_x, self.origin_y,
                     list(self.occupancy), None if self.confidence is None else list(self.confidence))
 
+    def is_reliably_occupied(self, row:int, col:int) -> bool:
+        index = self.index(row,col)
+        if(self.occupancy[index] != OCCUPIED):
+            return False
+        if(self.confidence is None):
+            return True
+        
+        #Are we atleats %60 sure that it is a reliable cell
+        return self.confidence[index] >= .6 
+
     # ── TODO: you write these two ───────────────────────────────────────────
     def world_to_cell(self, x: float, y: float) -> Cell:
         """
@@ -159,7 +169,8 @@ def inflate(grid: Grid, radius_m: float) -> Grid:
         row = math.floor(i / newGrid.width)
         col = i % newGrid.width
 
-        if(grid.is_occupied(row,col)):
+        #Swapped to prevent inflation
+        if(grid.is_reliably_occupied(row,col)):
             for row_offset in range(-radius_cells, radius_cells + 1):
                 for col_offset in range(-radius_cells, radius_cells + 1):
                     nearby_col = col + col_offset
