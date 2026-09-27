@@ -225,6 +225,10 @@ Each step has a check that tells you it's right before you move on, and ends wit
 | 4 | `replan.py`: `next_waypoint_index`, `path_is_valid`. | `python -m unittest tests.test_replan` | `step 4: replan helpers` |
 | 5 | `planner_node.py`: subscribe, publish, plan once. Get the rover across the `open` scenario. | `--scenario open` reaches the goal, 1 plan, 0 replans. | `step 5: plan once` |
 | 6 | Add the replan logic. Run `boulders`, `wall`. | Reaches the goal, 0 blocked ticks. | `step 6: replanning` |
+
+Boulder prediction replanning, the path will need to replan around 20 or 30 times, because as it discovers a boulder in its path, it would to replan as it approaches and would also need to consider new obstacles in its path.
+
+
 | 7 | `popup` and `goal-blocked`. | Reaches the goal, 0 blocked ticks, 0 needless replans. | `step 7: popup and goal-blocked` |
 | 8 | `--all`, then some `--scenario random --seed N` you haven't tried. | Every row reaches the goal. | `step 8: random seeds` |
 | 9 | Write your write-up (in this README), finish `METHODOLOGY.md` and `AI_LOG.md`. | Every question in the write-up has an answer with numbers from your own runs. | `step 9: write-up, methodology and AI log` |
