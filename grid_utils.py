@@ -165,11 +165,11 @@ def inflate(grid: Grid, radius_m: float) -> Grid:
                     nearby_col = col + col_offset
                     nearby_row = row + row_offset
                     if(newGrid.in_bounds(nearby_row,nearby_col)):
-                        #Distance formula
-                        # dist_m = math.sqrt((row_offset * grid.resolution) 
-                        #     ** 2 + (col_offset * grid.resolution) ** 2)
-                        # if(dist_m <= radius_m):
-                        index_holder = newGrid.index(nearby_row,nearby_col)
-                        newGrid.occupancy[index_holder] = OCCUPIED
+                        # Distance formula
+                        dist_m = math.sqrt((row_offset * grid.resolution) 
+                            ** 2 + (col_offset * grid.resolution) ** 2)
+                        if(dist_m <= radius_m):
+                            index_holder = newGrid.index(nearby_row,nearby_col)
+                            newGrid.occupancy[index_holder] = OCCUPIED
     
     return newGrid
